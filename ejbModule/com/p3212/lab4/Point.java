@@ -7,31 +7,33 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="points")
 public class Point {
 
 	@Id
-	@Column(name = "X")
+	@Column(name = "x")
 	private double x;
 	
 	@Id
-	@Column(name = "Y")
+	@Column(name = "y")
 	private double y;
 	
 	@Id
-	@Column(name = "R")
+	@Column(name = "t")
 	private double r;
 	
-	@Column(name = "HIT")
+	@Column(name = "hit")
 	private boolean hit;
 	
 	@Id
-	@Column(name = "CREATED ON")
+	@Column(name = "created_on")
 	private Date creationDate;
 	
 	@ManyToOne
-	@JoinColumn
+	@JoinColumn(name="creator")
 	private User creator;
 	
     public Point() {
