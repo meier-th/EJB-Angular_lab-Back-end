@@ -1,15 +1,14 @@
 package com.p3212.lab4;
 
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
-@NamedQuery(
-name = "pointlist",
-query = "SELECT p FROM Point p WHERE p.sessionid = :session ORDER BY p.created DESC")
 public class Point {
 
 	@Id
@@ -31,9 +30,9 @@ public class Point {
 	@Column(name = "CREATED ON")
 	private Date creationDate;
 	
-	@Id
-    @Column (name = "CREATOR")
-    private String userName;
+	@ManyToOne
+	@JoinColumn
+	private User creator;
 	
     public Point() {
     	this.creationDate = new Date();
@@ -79,12 +78,12 @@ public class Point {
 		this.creationDate = creationDate;
 	}
 
-	public String getUserName() {
-		return userName;
+	public User getCreator() {
+		return creator;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setCreator(User creator) {
+		this.creator = creator;
 	}
 	
 }
