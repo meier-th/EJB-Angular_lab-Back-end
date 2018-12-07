@@ -13,10 +13,10 @@ import javax.persistence.Table;
 public class User {
 
 	@Id
-	@Column(name="login")
+	@Column(name="login", length=15, nullable = false)
 	private String login;
 	
-	@Column(name="password")
+	@Column(name="password", length=15, nullable = false)
 	private String password;
 	
 	@OneToMany(mappedBy="creator")
