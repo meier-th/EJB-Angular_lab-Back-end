@@ -17,7 +17,7 @@ public class User {
 	private String login;
 	
 	@Column(name="password", length=15, nullable = false)
-	private String password;
+	private int password;
 	
 	@OneToMany(mappedBy="creator")
 	private List<Point> points;
@@ -32,12 +32,12 @@ public class User {
 		this.login = login;
 	}
 
-	public String getPassword() {
+	public int getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = password.hashCode();
 	}
 
 	public List<Point> getPoints() {
