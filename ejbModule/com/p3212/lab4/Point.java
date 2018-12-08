@@ -7,10 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="points")
+@NamedQuery(
+name = "pointlist",
+query = "SELECT p FROM Point p WHERE p.creator = :creator ORDER BY p.creationDate DESC")
 public class Point {
 
 	@Id
@@ -30,6 +36,7 @@ public class Point {
 	
 	@Id
 	@Column(name = "created_on")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationDate;
 	
 	@ManyToOne

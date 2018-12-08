@@ -1,5 +1,7 @@
 package com.p3212.lab4;
 
+import java.io.IOException;
+
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.servlet.http.HttpServletRequest;
@@ -31,9 +33,41 @@ public class AuthorizationBean {
 				user.setLogin(login);
 				user.setPassword(password);
 				userService.createUser(user);
-				// todo
+				req.getSession().setAttribute("login", login);
+				resp.sendRedirect("/main.html");
 			}
 		} catch (Exception exc) {
+			System.err.println(exc.getMessage());
+		}
+	}
+	
+	@Path("/login")
+	@POST
+	public void loginUser(@FormParam("login")String login, @FormParam("password") String password, @Context HttpServletResponse resp, @Context HttpServletRequest req) {
+		try {
+			User usr = userService.getUser(login);
+			if (usr == null) {
+				resp.sendRedirect("/login");
+				return;
+			}
+			if (usr.getPassword() != password.hashCode()) {
+				resp.sendRedirect("/login");
+				return;
+			}
+			req.getSession().setAttribute("login", login);
+			resp.sendRedirect("/main.html");
+		} catch (IOException exc) {
+			System.err.println(exc.getMessage());
+		}
+	}
+	
+	@Path("/logout")
+	@POST
+	public void logoutUser(@Context HttpServletResponse resp, @Context HttpServletRequest req) {
+		try {
+			req.getSession().invalidate();
+			resp.sendRedirect("/index.html");
+		} catch (IOException exc) {
 			System.err.println(exc.getMessage());
 		}
 	}
