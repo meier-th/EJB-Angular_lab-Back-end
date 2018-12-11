@@ -4,6 +4,7 @@ import javax.ejb.EJB;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.ejb.Stateless;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
@@ -12,6 +13,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -34,14 +36,17 @@ public class AuthorizationBean {
         boolean passed = checkUser(login, password) && !userService.checkIfNameIsOccupied(login);
         if (!passed) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to create a user.").build();
-        } //resp.sendRedirect("/lab4/signup.html");
+        } 
         else {
             User user = new User();
             user.setLogin(login);
             user.setPassword(password);
             userService.createUser(user);
-            req.getSession().setAttribute("login", login);
-            //resp.sendRedirect("/main.html");
+            //req.getSession().setAttribute("login", login);
+            Cookie cookie = new Cookie("login", login);
+            cookie.setPath("/Lab4-war/webresources/point");
+            resp.addCookie(cookie);
+           
             return Response.status(Response.Status.CREATED).entity("User was successfully registered.").build();
         }
     }
@@ -52,23 +57,29 @@ public class AuthorizationBean {
     public Response loginUser(@FormParam("login") String login, @FormParam("password") String password, @Context HttpServletResponse resp, @Context HttpServletRequest req) {
             User usr = userService.getUser(login);
             if (usr == null) {
-                //resp.sendRedirect("/login");
+                
                 return Response.status(Response.Status.UNAUTHORIZED).entity("User doesn't exist.").build();
             }
             if (usr.getPassword() != password.hashCode()) {
-                //resp.sendRedirect("/login");
+                
                 return Response.status(Response.Status.FORBIDDEN).entity("Incorrect password.").build();
             }
-            req.getSession().setAttribute("login", login);
+            //req.getSession().setAttribute("login", login);
+            Cookie cookie = new Cookie("login", login);
+            cookie.setPath("/Lab4-war/webresources/point");
+            resp.addCookie(cookie);
             return Response.status(Response.Status.OK).entity("Logged in.").build();
-            //resp.sendRedirect("/main.html");
+            
     }
 
     @Path("logout")
     @GET
     public Response logoutUser(@Context HttpServletResponse resp, @Context HttpServletRequest req) {
-            req.getSession().invalidate();
-            //resp.sendRedirect("/index.html");
+            //req.getSession().invalidate();
+            Cookie cookie = new Cookie("login", "");
+            cookie.setMaxAge(0);
+            cookie.setPath("/Lab4-war/webresources/point");
+            resp.addCookie(cookie);
             return Response.status(Response.Status.OK).entity("Logged out.").build();
     }
 

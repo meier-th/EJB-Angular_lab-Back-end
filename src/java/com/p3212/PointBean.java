@@ -5,6 +5,7 @@ import javax.ejb.EJB;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.ejb.Stateless;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
@@ -35,8 +36,21 @@ public class PointBean {
             @Context HttpServletRequest req,
             @Context HttpServletResponse resp) {
         try {
-            String login = (String) req.getSession().getAttribute("login");
-            if (login == null) {
+            //String login = (String) req.getSession().getAttribute("login");
+            boolean passed = false;
+            Cookie cookies[] = req.getCookies();
+            if (cookies == null)
+                return Response.status(Response.Status.FORBIDDEN).entity("User is not logged in").build();
+            Cookie username = new Cookie("a","b");
+            for (Cookie ck : cookies) {
+                if (ck.getName().equals("login")) {
+                    username = ck;
+                    passed = true;
+                    break;
+                }
+            }
+            //if (login == null) {
+            if (!passed) {
                 return Response.status(Response.Status.FORBIDDEN).entity("User is not logged in").build();
             }
             boolean hit;
@@ -64,7 +78,7 @@ public class PointBean {
             pnt.setR(r);
             pnt.setX(x);
             pnt.setY(y);
-            pnt.setCreator(userService.getUser(login));
+            pnt.setCreator(userService.getUser(username.getValue()));
             pointService.addPoint(pnt);
             return Response.ok("added").build();
         } catch (Exception exc) {
@@ -74,12 +88,26 @@ public class PointBean {
     
     @GET
     public Response getUsersPoints(@Context HttpServletRequest req, @Context HttpServletResponse resp) {
-        String login = (String) req.getSession().getAttribute("login");
-        if (login == null) {
-            //resp.sendRedirect("/login");
+        //String login = (String) req.getSession().getAttribute("login");
+        
+        boolean passed = false;
+            Cookie cookies[] = req.getCookies();
+            if (cookies == null)
+                return Response.status(Response.Status.FORBIDDEN).entity("User is not logged in.").build();
+            Cookie username = new Cookie("a","b");
+            for (Cookie ck : cookies) {
+                if (ck.getName().equals("login")) {
+                    username = ck;
+                    passed = true;
+                    break;
+                }
+            }
+        
+        //if (login == null) {
+        if (!passed) {
             return Response.status(Response.Status.FORBIDDEN).entity("User is not logged in.").build();
         }
-        List<Point> pnts = pointService.getUsersPoints(userService.getUser(login));
+        List<Point> pnts = pointService.getUsersPoints(userService.getUser(username.getValue()));
         String rsp = "[";
         for (Point pnt : pnts) {
             rsp += (pnt.toString() + ",\n");
