@@ -2,7 +2,7 @@
 <persistence version="2.0"
     xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
-    <persistence-unit name="provider" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="provider" transaction-type="JTA">
         
 <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
@@ -10,9 +10,9 @@
         <class>com.p3212.lab4.User</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.driver.OracleDriver" />
-            <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521/orbis" />
-            <property name="javax.persistence.jdbc.user" value="s243874" />
-            <property name="javax.persistence.jdbc.password" value="rty031" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@192.168.10.10:1521/orbis" />
+            <property name="javax.persistence.jdbc.user" value="" />
+            <property name="javax.persistence.jdbc.password" value="" />
             <property name="eclipselink.query-results-cache" value="false"/>
         </properties>
     </persistence-unit>

@@ -1,4 +1,4 @@
-package com.p3212.lab4;
+package com.p3212;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -11,7 +11,7 @@ public class UserServiceBean {
     private EntityManager em;
 	
 	public void createUser(User user) {
-		em.persist(em);
+		em.persist(user);
 	}
 
 	public boolean checkIfNameIsOccupied(String name) {
