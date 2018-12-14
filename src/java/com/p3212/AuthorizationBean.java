@@ -44,7 +44,7 @@ public class AuthorizationBean {
             userService.createUser(user);
             //req.getSession().setAttribute("login", login);
             Cookie cookie = new Cookie("login", login);
-            cookie.setPath("/Lab4-war/webresources/point");
+            cookie.setPath("/Lab4-war");
             resp.addCookie(cookie);
            
             return Response.status(Response.Status.CREATED).entity("User was successfully registered.").build();
@@ -66,7 +66,7 @@ public class AuthorizationBean {
             }
             //req.getSession().setAttribute("login", login);
             Cookie cookie = new Cookie("login", login);
-            cookie.setPath("/Lab4-war/webresources/point");
+            cookie.setPath("/Lab4-war");
             resp.addCookie(cookie);
             return Response.status(Response.Status.OK).entity("Logged in.").build();
             
@@ -78,7 +78,7 @@ public class AuthorizationBean {
             //req.getSession().invalidate();
             Cookie cookie = new Cookie("login", "");
             cookie.setMaxAge(0);
-            cookie.setPath("/Lab4-war/webresources/point");
+            cookie.setPath("/Lab4-war");
             resp.addCookie(cookie);
             return Response.status(Response.Status.OK).entity("Logged out.").build();
     }
