@@ -30,12 +30,19 @@ public class PointBean {
     UserServiceBean userService;
     
     @POST
+    @Produces(MediaType.TEXT_PLAIN)
     public Response checkAndSave(@FormParam("X") float x,
             @FormParam("Y") float y,
             @FormParam("R") float r,
             @Context HttpServletRequest req,
             @Context HttpServletResponse resp) {
         try {
+        	String xVal = String.format(java.util.Locale.US,"%.2f", x);
+        	String yVal = String.format(java.util.Locale.US, "%.2f", y);
+        	String rVal = String.format(java.util.Locale.US, "%.2f", r);
+        	x = Float.parseFloat(xVal);
+        	y = Float.parseFloat(yVal);
+        	r = Float.parseFloat(rVal);
             //String login = (String) req.getSession().getAttribute("login");
             boolean passed = false;
             Cookie cookies[] = req.getCookies();
@@ -53,6 +60,10 @@ public class PointBean {
             if (!passed) {
                 return Response.status(Response.Status.FORBIDDEN).entity("User is not logged in").build();
             }
+            
+            if (x > 4 || x < -4 || y > 4 || y <-4 || r<0 || r > 3)
+            	return Response.status(Response.Status.BAD_REQUEST).entity("Server-side validation failed.").build();
+            
             boolean hit;
             if (x > 0 && y > 0) {
                 hit = false;
@@ -80,7 +91,11 @@ public class PointBean {
             pnt.setY(y);
             pnt.setCreator(userService.getUser(username.getValue()));
             pointService.addPoint(pnt);
-            return Response.ok("added").build();
+            String toRet;
+            if (hit)
+            	toRet = "true";
+            else toRet = "false";
+            return Response.ok(toRet).build();
         } catch (Exception exc) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(exc.getMessage()).build();
         }
